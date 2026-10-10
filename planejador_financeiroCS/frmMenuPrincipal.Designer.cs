@@ -41,6 +41,9 @@
             btnNext = new Button();
             btnMensal = new Button();
             panel1 = new Panel();
+            panel2 = new Panel();
+            label1 = new Label();
+            button1 = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -155,6 +158,9 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(button1);
+            panel1.Controls.Add(panel2);
+            panel1.Controls.Add(label1);
             panel1.Controls.Add(btnMensal);
             panel1.Controls.Add(btnBack);
             panel1.Controls.Add(btnNext);
@@ -162,6 +168,32 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(207, 544);
             panel1.TabIndex = 12;
+            // 
+            // panel2
+            // 
+            panel2.Location = new Point(0, 336);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(207, 208);
+            panel2.TabIndex = 13;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(3, 311);
+            label1.Name = "label1";
+            label1.Size = new Size(48, 15);
+            label1.TabIndex = 12;
+            label1.Text = "Eventos";
+            // 
+            // button1
+            // 
+            button1.Location = new Point(41, 78);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 23);
+            button1.TabIndex = 14;
+            button1.Text = "button1";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // frmMenuPrincipal
             // 
@@ -183,6 +215,7 @@
             Text = "frmMenuPrincipal";
             Load += frmMenuPrincipal_Load;
             panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -201,5 +234,8 @@
         private Button btnNext;
         private Button btnMensal;
         private Panel panel1;
+        private Panel panel2;
+        private Label label1;
+        private Button button1;
     }
 }

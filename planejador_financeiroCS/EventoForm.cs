@@ -1,5 +1,4 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
+using planejador_financeiroCS.Services;
 
 namespace planejador_financeiroCS
 {
@@ -23,39 +23,35 @@ namespace planejador_financeiroCS
 
         private void EventoForm_Load(object sender, EventArgs e)
         {
-            label1.Text = ucDia.static_day + "/" + frmMenuPrincipal.static_month + "/" + frmMenuPrincipal.static_year;
-            textBox1.Text = label1.Text;
-            //textBox1.Enabled = false;
+            textBox1.Text = ucDia.static_day + "/" + frmMenuPrincipal.static_month + "/" + frmMenuPrincipal.static_year;
+            textBox1.Enabled = false;
         }
 
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnSalvar_Click(object sender, EventArgs e)
         {
-            var csb = new MySqlConnectionStringBuilder
+            try
             {
-                Server = "localhost",
-                Port = 3306,
-                Database = "planejador_financeiro",
-                UserID = "root",
-                Password = "",
-                SslMode = MySqlSslMode.Disabled // <-- changed from MySqlSslMode.None
-            };
-        
-            using (var conn = new MySqlConnection(csb.ConnectionString))
-            {
-                conn.Open();
-                const string sql = "INSERT INTO tbl_evento(data,evento) values (?,?)";
-                using (var cmd = new MySqlCommand(sql, conn))
+                DateTime data = DateTime.Parse(textBox1.Text);
+                decimal valor = decimal.Parse(textBoxValor.Text); // default value for now, can be extended to allow user input
+                // Use LancamentoStore; store event text as Name and Value=0 for now
+                if (checkBoxRecurring != null && checkBoxRecurring.Checked)
                 {
-                    DateTime data = DateTime.Parse(label1.Text);
-                    //data = data.Replace(" ","");
-                    cmd.Parameters.AddWithValue("data", data);
-                    cmd.Parameters.AddWithValue("evento", textBox2.Text);
-                    cmd.ExecuteNonQuery();
+                    LancamentoStore.Instance.AddRecurringMonthly(textBoxNome.Text ?? string.Empty, valor, comboBoxTipo.SelectedItem?.ToString() ?? string.Empty, data);
                 }
+                else
+                {
+                    LancamentoStore.Instance.AddOneTime(textBoxNome.Text ?? string.Empty, valor, comboBoxTipo.SelectedItem?.ToString() ?? string.Empty, data);
+                }
+
+                MessageBox.Show("Salvo com sucesso!");
             }
-        
-            MessageBox.Show("Salvo com sucesso!");
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao salvar: " + ex.Message);
+            }
         }
+
+
     }
 }
