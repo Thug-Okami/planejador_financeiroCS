@@ -16,14 +16,17 @@ namespace planejador_financeiroCS
         //string connString = "Server=localhost;Port=3306;Database=planejador_financeiro;Uid=root;Pwd=;SslMode=None;";
 
 
-        public EventoForm()
+        private readonly DateTime _data;
+
+        public EventoForm(DateTime data)
         {
             InitializeComponent();
+            _data = data.Date;
         }
 
         private void EventoForm_Load(object sender, EventArgs e)
         {
-            textBox1.Text = ucDia.static_day + "/" + frmMenuPrincipal.static_month + "/" + frmMenuPrincipal.static_year;
+            textBox1.Text = _data.ToString("dd/MM/yyyy");
             textBox1.Enabled = false;
         }
 
@@ -32,9 +35,12 @@ namespace planejador_financeiroCS
         {
             try
             {
-                DateTime data = DateTime.Parse(textBox1.Text);
-                decimal valor = decimal.Parse(textBoxValor.Text); // default value for now, can be extended to allow user input
-                // Use LancamentoStore; store event text as Name and Value=0 for now
+                DateTime data = _data;
+                if (!decimal.TryParse(textBoxValor.Text, NumberStyles.Number, CultureInfo.CurrentCulture, out decimal valor))
+                {
+                    MessageBox.Show("Valor inválido.");
+                    return;
+                }
                 if (checkBoxRecurring != null && checkBoxRecurring.Checked)
                 {
                     LancamentoStore.Instance.AddRecurringMonthly(textBoxNome.Text ?? string.Empty, valor, comboBoxTipo.SelectedItem?.ToString() ?? string.Empty, data);
@@ -45,6 +51,7 @@ namespace planejador_financeiroCS
                 }
 
                 MessageBox.Show("Salvo com sucesso!");
+                Close();
             }
             catch (Exception ex)
             {

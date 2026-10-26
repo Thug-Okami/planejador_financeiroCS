@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using planejador_financeiroCS.Services;
 
@@ -7,10 +7,7 @@ namespace planejador_financeiroCS
     public partial class frmMenuPrincipal : Form
     {
         //variaveis para armazenar o mes e ano atual
-        public static int _month, _year;
-
-        //
-        public static int static_month, static_year;
+        private int _month, _year;
 
         public frmMenuPrincipal()
         {
@@ -31,36 +28,26 @@ namespace planejador_financeiroCS
             string monthName = new DateTimeFormatInfo().GetMonthName(month);
             lblMes.Text = monthName.ToUpper() + " " + year;
 
-            //tutorial2
-            static_month = _month;
-            static_year = _year;
-            //.
-
             DateTime startofTheMonth = new DateTime(year, month, 1);
             int day = DateTime.DaysInMonth(year, month);
-            int week = Convert.ToInt32(startofTheMonth.DayOfWeek.ToString("d"));
+            // o cabeçalho começa na segunda: segunda = 0 ... domingo = 6
+            int week = ((int)startofTheMonth.DayOfWeek + 6) % 7;
 
-            var lancamentos = LancamentoStore.Instance.GetLancamentosForMonth(month, year);
-            for (int i = 1; i < week; i++)
+            // células vazias antes do dia 1
+            for (int i = 0; i < week; i++)
             {
-                ucDia uc = new ucDia("");
+                ucDia uc = new ucDia(null);
                 flowLayoutPanel1.Controls.Add(uc);
             }
             for (int i = 1; i <= day; i++)
             {
-                var count = lancamentos.Count(l => l.Date.Day == i);
-                var label = count > 0 ? i + " (" + count + ")" : i + " ";
-                ucDia uc = new ucDia(label);
+                ucDia uc = new ucDia(new DateTime(year, month, i));
                 flowLayoutPanel1.Controls.Add(uc);
             }
         }
 
         private void btnNext_Click(object sender, EventArgs e)
         {
-            //tutorial2
-            static_month = _month;
-            static_year = _year;
-            //.
 
             _month += 1;
             if (_month > 12)
@@ -75,10 +62,6 @@ namespace planejador_financeiroCS
         private void btnBack_Click(object sender, EventArgs e)
         {
 
-            //tutorial2
-            static_month = _month;
-            static_year = _year;
-            //.
             _month -= 1;
             if (_month < 1)
             {

@@ -32,7 +32,6 @@
             panel1 = new Panel();
             label2 = new Label();
             label1 = new Label();
-            timer1 = new System.Windows.Forms.Timer(components);
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -67,10 +66,6 @@
             label1.TabIndex = 0;
             label1.Text = "00";
             // 
-            // timer1
-            // 
-            timer1.Tick += timer1_Tick;
-            // 
             // ucDia
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -89,6 +84,5 @@
         private Panel panel1;
         private Label label1;
         private Label label2;
-        private System.Windows.Forms.Timer timer1;
     }
 }
